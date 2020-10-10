@@ -1,68 +1,71 @@
-#### DO not run against CMake directly!
+#### Do not run against CMake directly!
 #### Meant to be used with gdnative-project as a "subproject"
 #### https://github.com/hlfstr/gdnative-project
 
-cmake_minimum_required(VERSION 3.15)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.15)
 # Set name of project to current directory name
-get_filename_component(LibName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
-string(REPLACE " " "_" LibName ${LibName})
-project(${LibName} LANGUAGES CXX)
+GET_FILENAME_COMPONENT(LibName ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+STRING(REPLACE " " "_" LibName ${LibName})
+PROJECT(${LibName} LANGUAGES CXX)
+
+# include the version.txt
+INCLUDE(${PROJECT_SOURCE_DIR}/version.txt OPTIONAL)
 
 # Set output directory
-set(OUTPATH "${PROJECT_BINARY_DIR}/lib/${SYSTEM_NAME}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPATH}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${OUTPATH}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPATH}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPATH}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${OUTPATH}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OUTPATH}")
-set(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
+SET(OUTPATH "${PROJECT_BINARY_DIR}/lib/${SYSTEM_NAME}")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPATH}")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${OUTPATH}")
+SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OUTPATH}")
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPATH}")
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${OUTPATH}")
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OUTPATH}")
+SET(CMAKE_PDB_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
 
 # Find all source files in source dir
-file(GLOB_RECURSE LIBSOURCES ${PROJECT_SOURCE_DIR}/*.c**)
-file(GLOB_RECURSE LIBHEADERS ${PROJECT_SOURCE_DIR}/*.h**)
+FILE(GLOB_RECURSE LIBSOURCES ${PROJECT_SOURCE_DIR}/*.c**)
+FILE(GLOB_RECURSE LIBHEADERS ${PROJECT_SOURCE_DIR}/*.h**)
 
 # Define library
-add_library(${LibName} STATIC ${LIBSOURCES} ${LIBHEADERS})
-add_dependencies(${LibName} libgodot-cpp)
+ADD_LIBRARY(${LibName} STATIC ${LIBSOURCES} ${LIBHEADERS})
 
 # Set target features
-target_compile_features(${LibName} PUBLIC cxx_std_17)
-set_target_properties(${LibName} PROPERTIES PREFIX "lib")
-if(ANDROID)
-	set_target_properties(${LibName} PROPERTIES OUTPUT_NAME "${LibName}.${ANDROID_ABI}")
-else()
-  set_target_properties(${LibName} PROPERTIES OUTPUT_NAME "${LibName}.${BITS}")
-endif()
+TARGET_COMPILE_FEATURES(${LibName} PUBLIC cxx_std_17)
+SET_TARGET_PROPERTIES(${LibName} PROPERTIES PREFIX "lib")
+IF(ANDROID)
+	SET_TARGET_PROPERTIES(${LibName} PROPERTIES OUTPUT_NAME "${LibName}.${ANDROID_ABI}")
+ELSE()
+  SET_TARGET_PROPERTIES(${LibName} PROPERTIES OUTPUT_NAME "${LibName}.${BITS}")
+ENDIF()
 
 # Include godot-cpp and other needed stuff
-target_include_directories(${LibName}
+TARGET_INCLUDE_DIRECTORIES(${LibName}
   PUBLIC
   ${PROJECT_SOURCE_DIR}
   ${SourceDir}/include/godot-cpp/include
   ${SourceDir}/include/godot-cpp/include/core
   ${SourceDir}/include/godot-cpp/include/gen
-  ${PROJECT_BINARY_DIR}/gen
+  ${VERSIONS_DIR}
 )
 
 # Include godot_headers and ignore any warnings
-target_include_directories(${LibName}
+TARGET_INCLUDE_DIRECTORIES(${LibName}
   SYSTEM PUBLIC ${SourceDir}/include/godot-cpp/godot_headers
 )
 
 # Set compile flags
-set_property(TARGET ${LibName} APPEND_STRING PROPERTY COMPILE_FLAGS ${C_FLAGS})
-set_property(TARGET ${LibName} APPEND_STRING PROPERTY LINK_FLAGS ${L_FLAGS})
+SET_PROPERTY(TARGET ${LibName} APPEND_STRING PROPERTY COMPILE_FLAGS ${C_FLAGS})
+SET_PROPERTY(TARGET ${LibName} APPEND_STRING PROPERTY LINK_FLAGS ${L_FLAGS})
 
 # Include libgodot-cpp
-target_link_libraries(${LibName} godot-cpp)
+ADD_DEPENDENCIES(${LibName} godot-cpp)
+TARGET_LINK_LIBRARIES(${LibName} godot-cpp)
 
 # Add this to the main target
-target_include_directories(${ProjectId}
+TARGET_INCLUDE_DIRECTORIES(${ProjectId}
   PUBLIC
   ${PROJECT_SOURCE_DIR}
 )
 
 # Add this as a dependency of the main project
-add_dependencies(${ProjectId} ${LibName})
-target_link_libraries(${ProjectId} ${LibName})
+ADD_DEPENDENCIES(${ProjectId} ${LibName})
+TARGET_LINK_LIBRARIES(${ProjectId} ${LibName})

@@ -1,0 +1,19 @@
+# Set version number
+SET (_VERSION_MAJOR 0)
+SET (_VERSION_MINOR 5)
+SET (_VERSION_REVISION 0)
+
+##=- Do not edit below this line -=##
+STRING (TOUPPER ${PROJECT_NAME} VER_NAME)
+STRING(REPLACE "-" "" VER_NAME ${VER_NAME})
+EXECUTE_PROCESS(COMMAND git rev-parse --short @:./
+RESULT_VARIABLE _res_dump
+OUTPUT_VARIABLE _VERSION_TAG
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+# sometimes there is a newline depending on git, remove that
+STRING(REPLACE "\n" "" _VERSION_TAG ${_VERSION_TAG})
+
+CONFIGURE_FILE (
+    "${PROJECT_SOURCE_DIR}/version.hpp.in"
+    "${VERSIONS_DIR}/version-${VER_NAME}.hpp"
+)
