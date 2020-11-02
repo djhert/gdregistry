@@ -14,7 +14,7 @@ private:                             \
 	static bool _reg;                \
                                      \
 public:                              \
-	T(){};                           \
+	T() = default;                   \
 	~T();                            \
 	static void _register_methods(); \
 	void _init();
@@ -25,7 +25,7 @@ private:                             \
 	static bool _reg;                \
                                      \
 public:                              \
-	T(){};                           \
+	T() = default;                   \
 	~T();                            \
 	static void _register_methods(); \
 	virtual void _init();
@@ -36,7 +36,7 @@ private:                    \
 	static bool _reg;       \
                             \
 public:                     \
-	T(){};                  \
+	T() = default;          \
 	~T();                   \
 	static void _register_methods();
 

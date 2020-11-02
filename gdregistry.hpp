@@ -29,7 +29,7 @@ public:
 	// Default priority of 0
 	template <typename T>
 	static bool Register(const int &priority = 0) {
-		GDRegistry::instance()->_gens.push_back({ godot::register_class<T>, priority });
+		GDRegistry::instance()._gens.push_back({ godot::register_class<T>, priority });
 		return true;
 	};
 
@@ -40,7 +40,7 @@ public:
 	// Default priority of 10
 	template <typename T>
 	static bool RegisterTool(const int &priority = 10) {
-		GDRegistry::instance()->_gens.push_back({ godot::register_tool_class<T>, priority });
+		GDRegistry::instance()._gens.push_back({ godot::register_tool_class<T>, priority });
 		return true;
 	};
 
@@ -49,13 +49,12 @@ public:
 
 private:
 	// Follow the Singleton pattern
-	GDRegistry(){};
-	GDRegistry(const GDRegistry &){};
+	GDRegistry() = default;
+	GDRegistry(const GDRegistry &) = default;
 	~GDRegistry();
 
 	// static instances for the Singleton
-	static GDRegistry *instance();
-	static GDRegistry *_instance;
+	static GDRegistry &instance();
 
 	// std::vector of reg struct
 	std::vector<reg> _gens;

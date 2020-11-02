@@ -6,10 +6,10 @@ This project is meant to be used with the build setup here: **[gdnative-project]
 
 The included CMake file inherits many properties from that setup, including the location of the `godot-cpp` bindings.  Please see that repository for a nice (in my opinion) setup for GDNative development.  The rest assumes you are using the above.
 
-Include this as a `git subtree` in your `source/include` folder.
+Include this as a `git submodule` in your `source/include` folder.
 
 ```sh
-$ git subtree add --prefix=source/include/gdregistry https://github.com/hlfstr/gdregistry master
+$ git submodule add https://github.com/hlfstr/gdregistry source/include/gdregistry/
 ```
 
 From there, issue a build the standard way and GDRegistry will be built!
@@ -22,7 +22,14 @@ GDNative Registry (GDRegistry) is a singleton that allows you to store the **_re
 bool classname::boolean = godot::GDRegistry::Register<classname>();
 ```
 
-The included `gdlib.cpp` file will setup GDNative for you, as well as run the registrations when Godot starts.  This means just include this and work on **YOUR** code.
+In the **_godot_nativescript_init()_** function, you will call the `Run()` function for the registry which will register all of your classes.
+
+```c++
+extern "C" void GDN_EXPORT godot_nativescript_init(void *handle) {
+        godot::Godot::nativescript_init(handle);
+        godot::GDRegistry::Run();
+}
+```
 
 #### Priority 
 
