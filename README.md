@@ -9,7 +9,7 @@ The included CMake file inherits many properties from that setup, including the 
 Include this as a `git submodule` in your `source/include` folder.
 
 ```sh
-$ git submodule add https://github.com/hlfstr/gdregistry source/include/gdregistry/
+$ git submodule add https://github.com/hlfstr/gdregistry source/include/gdregistry
 ```
 
 From there, issue a build the standard way and GDRegistry will be built!
