@@ -1,7 +1,7 @@
 # Set version number
 SET (_VERSION_MAJOR 0)
-SET (_VERSION_MINOR 6)
-SET (_VERSION_REVISION 0)
+SET (_VERSION_MINOR 7)
+SET (_VERSION_REVISION 1)
 
 ##=- Do not edit below this line -=##
 STRING (TOUPPER ${PROJECT_NAME} VER_NAME)
